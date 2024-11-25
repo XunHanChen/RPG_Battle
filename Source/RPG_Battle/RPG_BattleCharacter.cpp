@@ -16,6 +16,7 @@
 #include <AbilitySystem/RPGAbilitySystemComponent.h>
 #include <Data/CharacterClassInfo.h>
 #include <Libraries/RPGAbilitySystemLibrary.h>
+#include <AbilitySystem/Attributes/RPGAttributeSet.h>
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -77,6 +78,11 @@ void ARPG_BattleCharacter::OnRep_PlayerState()
 	InitAbilityActorInfo();
 }
 
+UAbilitySystemComponent* ARPG_BattleCharacter::GetAbilitySystemComponent() const
+{
+	return RPGAbilitySystemComp;
+}
+
 
 void ARPG_BattleCharacter::InitAbilityActorInfo()
 {
@@ -88,6 +94,7 @@ void ARPG_BattleCharacter::InitAbilityActorInfo()
 		if (IsValid(RPGAbilitySystemComp))
 		{
 			RPGAbilitySystemComp->InitAbilityActorInfo(RPGPlayerState, this);
+			BindCallbacksToDependencies();
 			
 			if (HasAuthority())
 			{
@@ -114,6 +121,26 @@ void ARPG_BattleCharacter::InitClassDefaults()
 				RPGAbilitySystemComp->InitializeDefaultAttributes(SelectedClassInfo->DefaultAttributes);
 			}
 		}
+	}
+}
+
+void ARPG_BattleCharacter::BindCallbacksToDependencies()
+{
+	if (IsValid(RPGAbilitySystemComp) && IsValid(RPGAttributes))
+	{
+		RPGAbilitySystemComp->GetGameplayAttributeValueChangeDelegate(RPGAttributes->GetHealthAttribute()).AddLambda(
+			[this](const FOnAttributeChangeData& Data)
+			{
+				OnHealthChanged(Data.NewValue, RPGAttributes->GetMaxHealth());
+			});
+	}
+}
+
+void ARPG_BattleCharacter::BroadcastInitialValues()
+{
+	if (IsValid(RPGAttributes))
+	{
+		OnHealthChanged(RPGAttributes->GetHealth(), RPGAttributes->GetMaxHealth());
 	}
 }
 

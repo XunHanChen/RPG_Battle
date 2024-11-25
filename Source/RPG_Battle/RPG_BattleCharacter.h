@@ -7,8 +7,9 @@
 #include "Logging/LogMacros.h"
 
 // Project-specific custom components
-#include <AbilitySystem/RPGAbilitySystemComponent.h>
 #include <AbilitySystem/Attributes/RPGAttributeSet.h>
+#include <AbilitySystem/RPGAbilitySystemComponent.h>
+#include <AbilitySystemInterface.h>
 
 #include "RPG_BattleCharacter.generated.h"
 
@@ -21,7 +22,7 @@ struct FInputActionValue;
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
 UCLASS(config=Game)
-class ARPG_BattleCharacter : public ACharacter
+class ARPG_BattleCharacter : public ACharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
@@ -55,6 +56,11 @@ public:
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void OnRep_PlayerState() override;
 
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnHealthChanged(float CurrentHealth, float MaxHealth);
+
 protected:
 
 	/** Called for movement input */
@@ -84,6 +90,10 @@ private:
 
 	void InitAbilityActorInfo();
 	void InitClassDefaults();
+	void BindCallbacksToDependencies();
+
+	UFUNCTION(BlueprintCallable)
+	void BroadcastInitialValues();
 
 public:
 	/** Returns CameraBoom subobject **/
