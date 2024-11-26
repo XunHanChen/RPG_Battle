@@ -6,6 +6,9 @@
 #include "GameFramework/Actor.h"
 #include "EffectActor.generated.h"
 
+class UBoxComponent;
+class UGameplayEffect;
+
 UCLASS()
 class RPG_BATTLE_API AEffectActor : public AActor
 {
@@ -19,8 +22,17 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	UFUNCTION()
+	void OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+private:
+
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = true))
+	TObjectPtr<UStaticMeshComponent> ActorMesh;
+
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = true))
+	TObjectPtr<UBoxComponent> OverlapBox;
+
+	UPROPERTY(EditAnywhere, Category = "Custom Values|Effects")
+	TSubclassOf<UGameplayEffect> OverlapEffect;
 };
