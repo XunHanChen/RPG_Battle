@@ -6,6 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "RPGAbilitySystemComponent.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(FOnAttributesGiven);
 /**
  * 
  */
@@ -15,6 +16,8 @@ class RPG_BATTLE_API URPGAbilitySystemComponent : public UAbilitySystemComponent
 	GENERATED_BODY()
 	
 public:
+
+	FOnAttributesGiven OnAttributesGiven;
 
 	void AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& AbilitiesToGrant);
 	void AddCharacterPassiveAbilities(const TArray<TSubclassOf<UGameplayAbility>>& PassivesToGrant);

@@ -7,9 +7,10 @@
 #include "Logging/LogMacros.h"
 
 // Project-specific custom components
-#include <AbilitySystem/Attributes/RPGAttributeSet.h>
-#include <AbilitySystem/RPGAbilitySystemComponent.h>
+//#include <AbilitySystem/Attributes/RPGAttributeSet.h>
+//#include <AbilitySystem/RPGAbilitySystemComponent.h>
 #include <AbilitySystemInterface.h>
+#include <Character/CharacterBase.h>
 
 #include "RPG_BattleCharacter.generated.h"
 
@@ -17,12 +18,16 @@ class USpringArmComponent;
 class UCameraComponent;
 class UInputMappingContext;
 class UInputAction;
+
+class URPGAttributeSet;
+class URPGAbilitySystemComponent;
+
 struct FInputActionValue;
 
-DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
+//DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
 UCLASS(config=Game)
-class ARPG_BattleCharacter : public ACharacter, public IAbilitySystemInterface
+class ARPG_BattleCharacter : public ACharacterBase, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
@@ -58,9 +63,6 @@ public:
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void OnHealthChanged(float CurrentHealth, float MaxHealth);
-
 protected:
 
 	/** Called for movement input */
@@ -70,12 +72,16 @@ protected:
 	void Look(const FInputActionValue& Value);
 			
 
+	virtual void InitAbilityActorInfo() override;
+	virtual void BindCallbacksToDependencies() override;
+	virtual void InitClassDefaults() override;
+	virtual void BroadcastInitialValues() override;
 
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
 	// To add mapping context
-	virtual void BeginPlay();
+	virtual void BeginPlay() override;
 
 private:
 
@@ -84,16 +90,6 @@ private:
 
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	TObjectPtr<URPGAttributeSet> RPGAttributes;
-
-	UPROPERTY(EditAnywhere, Category = "Custom Values|Character Info")
-	FGameplayTag CharacterTag;
-
-	void InitAbilityActorInfo();
-	void InitClassDefaults();
-	void BindCallbacksToDependencies();
-
-	UFUNCTION(BlueprintCallable)
-	void BroadcastInitialValues();
 
 public:
 	/** Returns CameraBoom subobject **/

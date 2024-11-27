@@ -13,12 +13,15 @@
 
 // Project-specific custom components
 #include <Game/PlayerState/RPGPlayerState.h>
-#include <AbilitySystem/RPGAbilitySystemComponent.h>
+//#include <AbilitySystem/RPGAbilitySystemComponent.h>
 #include <Data/CharacterClassInfo.h>
 #include <Libraries/RPGAbilitySystemLibrary.h>
-#include <AbilitySystem/Attributes/RPGAttributeSet.h>
+//#include <AbilitySystem/Attributes/RPGAttributeSet.h>
 
-DEFINE_LOG_CATEGORY(LogTemplateCharacter);
+class URPGAttributeSet;
+class URPGAbilitySystemComponent;
+
+//DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 //////////////////////////////////////////////////////////////////////////
 // ARPG_BattleCharacter
@@ -177,10 +180,10 @@ void ARPG_BattleCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ARPG_BattleCharacter::Look);
 	}
-	else
+	/*else
 	{
 		UE_LOG(LogTemplateCharacter, Error, TEXT("'%s' Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
-	}
+	}*/
 }
 
 void ARPG_BattleCharacter::Move(const FInputActionValue& Value)

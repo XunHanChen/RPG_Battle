@@ -44,5 +44,4 @@ private:
 	TObjectPtr<URPGInputConfig> RPGInputConfig;
 
 	URPGAbilitySystemComponent* GetRPGAbilitySystemComponent();
-
 };
